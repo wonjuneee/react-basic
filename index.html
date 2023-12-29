@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    const Title = () => (
+      // arrow function 대신 return값으로 반환 가능
+      <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+        Hello I'm a title ver.2
+      </h3>
+    );
+    /* const h3 = React.createElement(
+      "h3",
+      {
+        id: "title",
+        onMouseEnter: () => console.log("mouse enter"),
+      },
+      "Hello I'm a title"
+    ); */
+
+    const Button = () => (
+      <button
+        style={{
+          backgroundColor: "tomato",
+        }} // sytle과 같은 props들은 여러 개의 attributes를 가질 수 있는데, 그렇기 때문에 {}로 둘러쌓여있는 값(형태)를 지니므로 이를 다시 이것 전체를 하나의 변수로 간주하여 {}로 다시 감싸줄 필요가 있음.
+        onClick={() => console.log("I'm clicked")}
+      >
+        Click me
+      </button>
+    );
+    /* const btn = React.createElement(
+      "button",
+      {
+        onClick: () => console.log("I'm clicked"),
+        style: {
+          backgroundColor: "tomato",
+        },
+      },
+      "Click Me"
+    ); */
+
+    const Container = () => (
+      // Title과 Button을 함수로 선언하여 필요할 때마다 해당하는 React Element를 사용할 수 있다.
+      <div>
+        <Title />
+        <Button />
+      </div>
+    );
+    // const container = React.createElement("div", null, [h3, btn]);
+    // props로 아무것도 가지지 않고(null), contents로 h3와 btn을 가지는 div 태그
+    ReactDOM.render(<Container />, root);
+  </script>
+</html>
