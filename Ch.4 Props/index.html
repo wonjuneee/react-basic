@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+
+  <script type="text/babel">
+    // 부모 컴포넌트로부터 자식 컴포넌트로 정보를 전달
+    function Btn(
+      /*props*/ { banana, big = true /*Defualt value*/, changeValue, fontSize }
+    ) {
+      // props 대신 인자 이름을 바로 받은 js 형식 역시 사용 가능
+      // props라는 유일한 인자로 부모 컴포넌트에서 넘어온 object를 받음 (두 번째 인자는 없다)
+      console.log(banana, "was rendered");
+      return (
+        <button
+          onClick={changeValue}
+          style={{
+            backgroundColor: big ? "tomato" : "orange",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize,
+          }}
+        >
+          {banana}
+        </button>
+      );
+    }
+    const MemorizedBtn = React.memo(Btn);
+    // 만일 부모에서 state 변경이 없는 컴포넌트는 re-rendering하지 않는다. 있다면 기존처럼 re-rendering한다.
+    // 일반 Btn 컴포넌트의 경우 state 변경 여부와 상관없이 일괄적으로 re-rendering을 실시한다.
+
+    Btn.propTypes = {
+      banana: PropTypes.string.isRequired,
+      changeValue: PropTypes.func,
+      big: PropTypes.bool,
+      fontSize: PropTypes.number.isRequired,
+    };
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        // Btn({banana:"save changes"})과 같은 역할. 즉, 함수의 인자로 banana를 넘겨주는 것과 같음
+        // Btn의 onClick은 evnetListner가 아닌, prop의 이름일 뿐으로, 실질적인 eventListner는 자식 컴포넌트의 tag에 추가해야한다.
+        <div>
+          <MemorizedBtn
+            banana={value}
+            changeValue={changeValue}
+            big={true}
+            fontSize={12}
+          />
+          <MemorizedBtn banana="Continue" fontSize={16} />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
